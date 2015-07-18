@@ -50,6 +50,8 @@ public class MainActivity extends ActionBarActivity {
         String sub2 = lll.substring(lll.indexOf(",")+1,lll.length()-1);
 //        String sub2 = lll.substring(29,44);
 //        Toast.makeText(this,""+ll,Toast.LENGTH_LONG);
+
+
         Log.d("DARSHANROHAN",""+ll);
         Log.d("DARSHANROHAN","sub1:"+sub1+" sub2:"+sub2);
         new get_data().execute();
