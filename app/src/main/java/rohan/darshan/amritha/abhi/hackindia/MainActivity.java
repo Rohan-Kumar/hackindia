@@ -1,10 +1,14 @@
 package rohan.darshan.amritha.abhi.hackindia;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +41,17 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        LatLng ll = intent.getParcelableExtra("abc");
+        String lll = ""+ll;
+//        String sub1 = lll.substring(10,27);
+        String sub1 = lll.substring(lll.indexOf("(")+1,lll.indexOf(","));
+        String sub2 = lll.substring(lll.indexOf(",")+1,lll.length()-1);
+//        String sub2 = lll.substring(29,44);
+//        Toast.makeText(this,""+ll,Toast.LENGTH_LONG);
+        Log.d("DARSHANROHAN",""+ll);
+        Log.d("DARSHANROHAN","sub1:"+sub1+" sub2:"+sub2);
         new get_data().execute();
     }
 

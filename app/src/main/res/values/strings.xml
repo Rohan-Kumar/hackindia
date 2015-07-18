@@ -4,5 +4,6 @@
     <string name="app_name">hackindia</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_map_1">Map_1</string>
 
 </resources>
