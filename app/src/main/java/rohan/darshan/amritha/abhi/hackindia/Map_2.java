@@ -64,7 +64,7 @@ public class Map_2 extends ActionBarActivity {
 
     }
 
-    public class Load extends AsyncTask<Void, Void, Void> {
+    public class Load extends AsyncTask<Void, Void, Integer> {
 
         String lat, lng, type;
 
@@ -75,8 +75,12 @@ public class Map_2 extends ActionBarActivity {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Integer aVoid) {
             super.onPostExecute(aVoid);
+            if (aVoid == 0) {
+                Toast.makeText(getApplicationContext(), "NO RESULTS ", Toast.LENGTH_SHORT).show();
+            }
+
             for (int k = 0; k < Lat.size(); k++) {
 
                 lati.add(Double.parseDouble(Lat.get(k)));
@@ -94,9 +98,9 @@ public class Map_2 extends ActionBarActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
 
-
+            int s = 0;
             String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
                     "json?location=" + lat + "," + lng + "&radius=500&types=" + type + "&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
 
@@ -111,19 +115,24 @@ public class Map_2 extends ActionBarActivity {
                 HttpEntity httpEntity = response.getEntity();
                 String resp = EntityUtils.toString(httpEntity);
                 Log.d("AMRITHAABHI", resp);
-                parseJson(resp);
+                s = parseJson(resp);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return null;
+            return s;
         }
 
-        private void parseJson(String responseString) {
+
+        private int parseJson(String responseString) {
             String latitude, longitude, name, rating;
             try {
                 JSONObject main = new JSONObject(responseString);
                 JSONArray jsonArray = main.getJSONArray("results");
+                String status = main.getString("status");
+                if (status.equals("ZERO_RESULTS")) {
+                    return 0;
+                }
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject geo = jsonObject.getJSONObject("geometry");
@@ -140,10 +149,13 @@ public class Map_2 extends ActionBarActivity {
 
                     Log.d("AMRITHAABHI", "latitude =" + latitude + " longitude =" + longitude + " ");
                 }
+                return 1;
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+            return 0;
         }
 
     }
