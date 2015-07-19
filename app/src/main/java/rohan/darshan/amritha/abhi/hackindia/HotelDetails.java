@@ -1,6 +1,6 @@
 package rohan.darshan.amritha.abhi.hackindia;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +14,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 
 /**
  * Created by Ramesh on 7/18/2015.
@@ -29,6 +31,8 @@ public class HotelDetails extends ActionBarActivity {
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     RecyclerView recyclerView;
+    String image;
+    ObservableScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,9 @@ public class HotelDetails extends ActionBarActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-
+        scrollView = (ObservableScrollView) findViewById(R.id.myScroll);
+        Intent in = getIntent();
+        image = in.getStringExtra(Map_1.IMAGE);
         Toolbar toolbar = mViewPager.getToolbar();
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
 
@@ -58,17 +64,17 @@ public class HotelDetails extends ActionBarActivity {
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, 0, 0);
         mDrawer.setDrawerListener(mDrawerToggle);
-
+        MaterialViewPagerHelper.registerScrollView(HotelDetails.this,scrollView,null);
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+
+
             @Override
             public HeaderDesign getHeaderDesign(int i) {
                 switch (i) {
                     case 0:
 //                        return HeaderDesign.fromColorAndDrawable(R.color.blue,first);
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.accent_material_light,
-                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
 
+                        return HeaderDesign.fromColorAndUrl(R.color.colorPrimary, image);
                 }
                 return null;
             }
@@ -78,7 +84,6 @@ public class HotelDetails extends ActionBarActivity {
         viewPager.setAdapter(new adap(getSupportFragmentManager()));
 
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-
 
 
     }
@@ -106,7 +111,6 @@ public class HotelDetails extends ActionBarActivity {
             return 1;
         }
     }
-
 
 
 }

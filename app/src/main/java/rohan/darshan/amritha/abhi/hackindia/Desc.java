@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Ramesh on 7/18/2015.
@@ -31,6 +33,11 @@ public class Desc extends Fragment {
     TextView Name, Addr, Desc;
     Intent intent;
     String name, addr, city, price, desc, lat, lng;
+    ScrollView scrollView ;
+    ArrayList<String> latitudes = new ArrayList<>();
+    ArrayList<String> longitudes = new ArrayList<>();
+    ArrayList<String> names = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -67,11 +74,13 @@ public class Desc extends Fragment {
         }
 
 
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-                "json?location=" + lat + "," + lng + "&radius=500&types=" + type + "&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
-
         @Override
         protected Void doInBackground(Void... params) {
+
+
+            String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+                    "json?location=" + lat + "," + lng + "&radius=500&types=" + type + "&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
+
 
             Log.d("AMRITHAABHI", "inside");
 
@@ -102,10 +111,13 @@ public class Desc extends Fragment {
                     JSONObject loc = geo.getJSONObject("location");
                     latitude = loc.getString("lat");
                     longitude = loc.getString("lng");
-                    name = geo.getString("name");
-                    rating = geo.getString("rating");
+                    name = jsonObject.getString("name");
+//                    rating = "" + jsonObject.getInt("rating");
+                    latitudes.add(latitude);
+                    longitudes.add(longitude);
+                    names.add(name);
 
-                    Log.d("AMRITHAABHI", latitude + " " + longitude + " " + name + " " + rating);
+                    Log.d("AMRITHAABHI", latitude + " " + longitude + " " + name + " ");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

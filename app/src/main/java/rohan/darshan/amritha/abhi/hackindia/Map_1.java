@@ -35,7 +35,7 @@ import java.util.List;
 
 public class Map_1 extends ActionBarActivity {
 
-    public static final String LAT = "lat", LNG = "lng", NAME = "name", ADDR = "addr", CITY = "city", DESC = "desc", PRICE = "price";
+    public static final String IMAGE = "image",LAT = "lat", LNG = "lng", NAME = "name", ADDR = "addr", CITY = "city", DESC = "desc", PRICE = "price";
     GoogleMap map;
     public ArrayList<String> DisplayNames = new ArrayList<>();
     public ArrayList<String> Address = new ArrayList<>();
@@ -98,6 +98,7 @@ public class Map_1 extends ActionBarActivity {
                         intent.putExtra(CITY, Cities.get(j));
                         intent.putExtra(LAT, sub3);
                         intent.putExtra(LNG, sub4);
+                        intent.putExtra(IMAGE,Images.get(j));
                         startActivity(intent);
 
                         break;
