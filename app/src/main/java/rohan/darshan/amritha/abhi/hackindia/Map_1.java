@@ -5,7 +5,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,12 +17,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +35,17 @@ import java.util.List;
 
 public class Map_1 extends ActionBarActivity {
 
-
+    public static final String LAT = "lat", LNG = "lng", NAME = "name", ADDR = "addr", CITY = "city", DESC = "desc", PRICE = "price";
     GoogleMap map;
-    ArrayList<String> latitude = new ArrayList<>();
-    ArrayList<String> longitude = new ArrayList<>();
+    public ArrayList<String> DisplayNames = new ArrayList<>();
+    public ArrayList<String> Address = new ArrayList<>();
+    public ArrayList<String> Cities = new ArrayList<>();
+    public ArrayList<String> Prices = new ArrayList<>();
+    public ArrayList<String> Images = new ArrayList<>();
+    public ArrayList<String> Descriptions = new ArrayList<>();
+    public ArrayList<String> Latitudes = new ArrayList<>();
+    public ArrayList<String> Longitudes = new ArrayList<>();
+
 
     ArrayList<Double> latVal = new ArrayList<>();
     ArrayList<Double> lonVal = new ArrayList<>();
@@ -58,7 +58,7 @@ public class Map_1 extends ActionBarActivity {
         new load_map().execute();
 
         LatLng i = getLocationFromAddress("Bangalore");
-        Toast.makeText(this,""+i,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "" + i, Toast.LENGTH_LONG).show();
 
     }
 
@@ -68,27 +68,48 @@ public class Map_1 extends ActionBarActivity {
                 .getMap();
         for (int k = 0; k < latVal.size(); k++) {
 
-//            LatLng customMarkerLoc = new LatLng(latVal.get(0), lonVal.get(0));//12.978301, 77.571945
-           /* Marker any = map.addMarker(new MarkerOptions()
-                            .position(customMarkerLoc)
-            );*/
 
-            map.addMarker(new MarkerOptions().position(new LatLng(latVal.get(k), lonVal.get(k)))).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-
-                    Toast.makeText(Map_1.this,""+marker.getPosition(),Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Map_1.this,MainActivity.class);
-                    intent.putExtra("abc",marker.getPosition());
-                    startActivity(intent);
-                    return false;
-                }
-            });
+            map.addMarker(new MarkerOptions().position(new LatLng(latVal.get(k), lonVal.get(k))))
+                    .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
 
         }
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                LatLng ll = marker.getPosition();
+                String lll = "" + ll;
+                String sub1 = lll.substring(lll.indexOf("(") + 1, lll.indexOf(","));
+                String sub2 = lll.substring(lll.indexOf(",") + 1, lll.length() - 1);
+                sub1 = sub1.substring(0, 8);
+                sub2 = sub2.substring(0, 8);
+
+
+                for (int j = 0; j < DisplayNames.size(); j++) {
+                    String sub3 = Latitudes.get(j).substring(0, 8);
+                    String sub4 = Longitudes.get(j).substring(0, 8);
+                    Log.d("ABHIDARSHAN", "sub1:" + sub1 + " sub2:" + sub2 + " lat:" + Latitudes.get(j) + " long:" + Longitudes.get(j));
+                    if (sub1.equals(sub3) && sub2.equals(sub4)) {
+                        Intent intent = new Intent(Map_1.this, HotelDetails.class);
+                        intent.putExtra(NAME, DisplayNames.get(j));
+                        intent.putExtra("darshan", Descriptions.get(j));
+                        intent.putExtra(PRICE, Prices.get(j));
+                        intent.putExtra(ADDR, Address.get(j));
+                        intent.putExtra(CITY, Cities.get(j));
+                        intent.putExtra(LAT, sub3);
+                        intent.putExtra(LNG, sub4);
+                        startActivity(intent);
+
+                        break;
+                    }
+                }
+                Toast.makeText(Map_1.this, "" + marker.getPosition(), Toast.LENGTH_LONG).show();
+
+
+                return false;
+            }
+        });
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(12.978301, 77.571945), 14.0f));
 
         // Move the camera instantly to hamburg with a zoom of 15.
@@ -98,7 +119,7 @@ public class Map_1 extends ActionBarActivity {
         map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
     }
 
-    public class load_map extends AsyncTask<Void,Void,Void>{
+    public class load_map extends AsyncTask<Void, Void, Void> {
 
 
         @Override
@@ -112,9 +133,9 @@ public class Map_1 extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            for (int j = 0; j < latitude.size(); j++) {
-                latVal.add(Double.parseDouble(latitude.get(j)));
-                lonVal.add(Double.parseDouble(longitude.get(j)));
+            for (int j = 0; j < Latitudes.size(); j++) {
+                latVal.add(Double.parseDouble(Latitudes.get(j)));
+                lonVal.add(Double.parseDouble(Longitudes.get(j)));
             }
 
             Log.d("DARSHANROHAN", "" + lonVal);
@@ -138,7 +159,7 @@ public class Map_1 extends ActionBarActivity {
             location.getLatitude();
             location.getLongitude();
 
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
 
         } catch (Exception ex) {
 
@@ -253,31 +274,32 @@ public class Map_1 extends ActionBarActivity {
             JSONArray jsonArray = main.getJSONArray("hotels");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                Log.d("DARSHANABHI",""+jsonObject);
-//                dispName = jsonObject.getString("displayName");
-//                DisplayNames.add(dispName);
-//
-//                addr = jsonObject.getString("address");
-//                Address.add(addr);
-//
-//                city = jsonObject.getString("city");
-//                Cities.add(city);
-//
-//                price = jsonObject.getString("price");
-//                Prices.add(price);
-//
-//                image = jsonObject.getString("imageURL");
-//                MediaStore.Images.add(image);
-//
-//                desc = jsonObject.getString("description");
-//                Descriptions.add(desc);
-//
+                Log.d("DARSHANABHI", "" + jsonObject);
+                dispName = jsonObject.getString("displayName");
+                DisplayNames.add(dispName);
+
+                addr = jsonObject.getString("address");
+                Address.add(addr);
+
+                city = jsonObject.getString("city");
+                Cities.add(city);
+
+                price = jsonObject.getString("price");
+                Prices.add(price);
+
+                image = jsonObject.getString("imageURL");
+                Images.add(image);
+
+                desc = jsonObject.getString("description");
+                Descriptions.add(desc);
+                Log.d("DARSHANROHAN", "Hey" + desc);
+
                 JSONObject cord = jsonObject.getJSONObject("geoCoordinates");
                 lat = cord.getString("lat");
-                latitude.add(lat);
+                Latitudes.add(lat);
 
                 lng = cord.getString("lng");
-                longitude.add(lng);
+                Longitudes.add(lng);
 
             }
 

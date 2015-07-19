@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
@@ -27,14 +28,17 @@ public class HotelDetails extends ActionBarActivity {
     MaterialViewPager mViewPager;
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_details);
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
-
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         Toolbar toolbar = mViewPager.getToolbar();
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
