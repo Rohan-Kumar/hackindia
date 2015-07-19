@@ -52,7 +52,7 @@ public class Desc extends Fragment {
         Desc.setText(desc);
         lat = intent.getStringExtra(Map_1.LAT);
         lng = intent.getStringExtra(Map_1.LNG);
-        new Load(lat, lng, "food").execute();
+        new Load("12.927", "77.627", "food").execute();
         return view;
     }
 
@@ -64,17 +64,22 @@ public class Desc extends Fragment {
             this.lat = lat;
             this.lng = lng;
             this.type = type;
+            Log.d("DARSHANAMRITHA",this.lat+" "+this.lng);
         }
 
 
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-                "json?location=" + lat + "," + lng + "&radius=500&types=" + type + "&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
+
+
+//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+//                "json?location=" + lat + "," + lng + "&radius=500&types=" + type + "&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
 
         @Override
         protected Void doInBackground(Void... params) {
 
             Log.d("AMRITHAABHI", "inside");
+            String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&types="+type+"&name=*&key=AIzaSyDm0xyQGJ1mDIMezQZxpUjGbtadDpuhdiU";
 
+            Log.d("AMRITHAABHI",url);
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
             try {
