@@ -79,6 +79,7 @@ public class Desc extends Fragment {
             HttpPost httpPost = new HttpPost(url);
             try {
                 HttpResponse response = httpClient.execute(httpPost);
+
                 HttpEntity httpEntity = response.getEntity();
                 String resp = EntityUtils.toString(httpEntity);
                 Log.d("AMRITHAABHI", resp);
