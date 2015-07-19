@@ -1,7 +1,5 @@
 package rohan.darshan.amritha.abhi.hackindia;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -92,7 +89,6 @@ public class HotelDetails extends ActionBarActivity {
         viewPager.setAdapter(new adap(getSupportFragmentManager()));
 
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-
 
 
     }
