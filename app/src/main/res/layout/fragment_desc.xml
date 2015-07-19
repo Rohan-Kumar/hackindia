@@ -35,7 +35,7 @@
                         android:id="@+id/nameId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="hey there,this  is thename of the hotel"
+                        android:text="hey there,this  is the name of the hotel"
                         android:textSize="30sp" />
 
 
@@ -77,12 +77,15 @@
                         android:id="@+id/DescId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="hey there,this  is the description of the hotel"
+                        android:text="hey there,this  is the price of the hotel"
                         android:textSize="25sp" />
 
 
                 </android.support.v7.widget.CardView>
             </LinearLayout>
         </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+
     </LinearLayout>
+
 </RelativeLayout>

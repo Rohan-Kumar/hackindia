@@ -1,5 +1,6 @@
 package rohan.darshan.amritha.abhi.hackindia;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,8 @@ public class HotelDetails extends ActionBarActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new RecyclerAdapter());
+        Intent intent = getIntent();
+        img_url= intent.getStringExtra(Map_1.IMAGE);
 
         Toolbar toolbar = mViewPager.getToolbar();
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
@@ -77,8 +80,13 @@ public class HotelDetails extends ActionBarActivity {
                     case 0:
 //                        return HeaderDesign.fromColorAndDrawable(R.color.blue,first);
                         return HeaderDesign.fromColorResAndUrl(
-                                R.color.accent_material_light,
+                                R.color.blue,
                                 "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                    case 1:
+//                        return HeaderDesign.fromColorAndDrawable(R.color.blue,second);
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.green,
+                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
 
                 }
                 return null;
@@ -108,12 +116,23 @@ public class HotelDetails extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new Desc();
+            if (position == 0)
+                return new Desc();
+            return new SecondDesc();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if(position==0)
+                return "Details";
+            if(position==1)
+                return "Description";
+            return "";
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
     }
 
@@ -133,9 +152,17 @@ public class HotelDetails extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         int position = recyclerView.getChildPosition(v);
-                        switch (position) {
                             //Intent
-                        }
+                        Intent intent = getIntent();
+                        String a = intent.getStringExtra("latitude");
+                        String b = intent.getStringExtra("longitude");
+                        String type = mNavTitles[position];
+                            Intent i = new Intent(HotelDetails.this,Map_2.class);
+                            i.putExtra("type",mNavTitles[position]);
+                       i.putExtra("lat",a);
+                        i.putExtra("lng",b);
+                        i.putExtra("type",type);
+                         startActivity(i);
                     }
                 });
                 return vhItem;

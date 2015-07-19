@@ -1,8 +1,11 @@
 package rohan.darshan.amritha.abhi.hackindia;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -35,7 +38,7 @@ import java.util.List;
 
 public class Map_1 extends ActionBarActivity {
 
-    public static final String IMAGE = "image",LAT = "lat", LNG = "lng", NAME = "name", ADDR = "addr", CITY = "city", DESC = "desc", PRICE = "price";
+    public static final String IMAGE = "image", LAT = "lat", LNG = "lng", NAME = "name", ADDR = "addr", CITY = "city", DESC = "desc", PRICE = "price";
     GoogleMap map;
     public ArrayList<String> DisplayNames = new ArrayList<>();
     public ArrayList<String> Address = new ArrayList<>();
@@ -55,11 +58,17 @@ public class Map_1 extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_1);
 
-        new load_map().execute();
+        if (hasConnection(getApplicationContext())) {
 
-        LatLng i = getLocationFromAddress("Bangalore");
-        Toast.makeText(this, "" + i, Toast.LENGTH_LONG).show();
+            new load_map().execute();
 
+            LatLng i = getLocationFromAddress("Bangalore");
+            Toast.makeText(this, "" + i, Toast.LENGTH_LONG).show();
+
+
+        } else {
+            Toast.makeText(getApplicationContext(), "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addMap() {
@@ -96,9 +105,9 @@ public class Map_1 extends ActionBarActivity {
                         intent.putExtra(PRICE, Prices.get(j));
                         intent.putExtra(ADDR, Address.get(j));
                         intent.putExtra(CITY, Cities.get(j));
-                        intent.putExtra(LAT, sub3);
-                        intent.putExtra(LNG, sub4);
-                        intent.putExtra(IMAGE,Images.get(j));
+                        intent.putExtra("latitude", sub3);
+                        intent.putExtra("longitude", sub4);
+                        intent.putExtra(IMAGE, Images.get(j));
                         startActivity(intent);
 
                         break;
@@ -168,6 +177,30 @@ public class Map_1 extends ActionBarActivity {
         }
 
         return p1;
+    }
+
+    public static boolean hasConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo wifiNetwork = cm
+                .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiNetwork != null && wifiNetwork.isConnected()) {
+            return true;
+        }
+
+        NetworkInfo mobileNetwork = cm
+                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (mobileNetwork != null && mobileNetwork.isConnected()) {
+            return true;
+        }
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            return true;
+        }
+
+        return false;
     }
 
     public void POST() {
