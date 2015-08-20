@@ -94,7 +94,10 @@ public class Map_2 extends ActionBarActivity {
                 map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
 
+
             }
+
+            map.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(lat),Double.parseDouble(lng)))).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         }
 
         @Override
